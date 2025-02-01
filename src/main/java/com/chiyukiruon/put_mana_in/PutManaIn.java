@@ -43,8 +43,6 @@ public class PutManaIn {
 
         if (ModList.get().isLoaded("origins")) {
             PutManaInPower.POWERS.register(modBus);
-        } else if (Config.onlyForOrigins) {
-            LOGGER.warn("Origins is not loaded, but onlyForOrigins is enabled. PutManaIn may not work");
         }
     }
 
@@ -56,8 +54,7 @@ public class PutManaIn {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (Config.needEmptyHand && !player.getMainHandItem().isEmpty()) return;
         if (Config.noCrouching && player.isCrouching()) return;
-        if (Config.onlyForOrigins) {
-            if (!ModList.get().isLoaded("origins")) return;
+        if (Config.onlyForOrigins && ModList.get().isLoaded("origins")) {
             if (!IPowerContainer.hasPower(player, PutManaInPower.TRANSFER_MANA.get())) return;
         }
 
