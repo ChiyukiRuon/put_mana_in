@@ -12,46 +12,31 @@
 
 You can customize the mod's behavior by adjusting the following options in the configuration file:
 
-#### `transferRatio` - **Mana Transfer Ratio**
-- **Type**: `double`
-- **Default**: `1.0`
-- Determines the ratio of mana transfer; can be adjusted as needed
+| Config Key       | Type      | Default | Description                                                                                                                                |
+|------------------|-----------|---------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| `transferRatio`  | `double`  | `1.0`   | Determines the ratio of mana transfer; can be adjusted as needed                                                                           |
+| `maxPerTrans`    | `int`     | `0`     | Maximum mana injected per transfer; `0` means no maximum                                                                                   |
+| `coolingTime`    | `int`     | `0`     | Cooldown time for mana injection, in ticks                                                                                                 |
+| `onlyForOrigins` | `boolean` | `false` | Effective only if **Origins (Forge) mod** is installed; provides power `put_mana_in:transfer_mana` and can be enabled via Origins datapack |
+| `needEmptyHand`  | `boolean` | `false` | Requires player to have an empty hand to transfer mana                                                                                     |
+| `noCrouching`    | `boolean` | `true`  | Disables mana transfer when crouching                                                                                                      |
 
-#### `maxPerTrans` - **Maximum Mana Per Injection**
-- **Type**: `int`
-- **Default**: `0`
-- Determines the maximum amount of mana that can be injected at once. `0` means no maximum
-
-#### `coolingTime` - **The cooling time of transferring mana**
-- **Type**: `int`
-- **Default**: `0`
-- Sets the cooldown time for mana injection, by tick
-
-#### `onlyForOrigins` - **Restricted to Origins**
-- **Type**: `boolean`
-- **Default**: `false`
-- Only takes effect when the **Origins (Forge) mod** is installed
-- Provides the power: `put_mana_in:transfer_mana`
-- Can be triggered via **Origins datapack** to allow specific origins to use this power
-
-**Example**:
+Origins Power Example
 ```json
 {
     "type": "put_mana_in:transfer_mana",
     "name": "PutManaIn",
     "description": "Hand Crank for Mages!"
 }
-```  
+```
 
-#### `needEmptyHand` - **Requires Empty Hand While Transfer Mana**
-- **Type**: `boolean`
-- **Default**: `false`
+---
 
-#### `noCrouching` - **Disable Transfer Mana While Crouching**
-- **Type**: `boolean`
-- **Default**: `false`
+## 🪄 **Command**
 
----  
+Use `/pmi debug [enable|disable]` to enable or disable debug logging for the current game session
+
+---
 
 ## ✨ **Thanks**
 

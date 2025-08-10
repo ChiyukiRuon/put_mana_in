@@ -3,14 +3,15 @@ package com.chiyukiruon.put_mana_in;
 import com.chiyukiruon.put_mana_in.apoli.register.PutManaInPower;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
-import com.mojang.logging.LogUtils;
 import io.github.edwinmindcraft.apoli.api.component.IPowerContainer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
@@ -18,7 +19,6 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,8 +32,6 @@ public class PutManaIn {
 
     // Define mod id in a common place for everything to reference
     public static final String MODID = "put_mana_in";
-    // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
 
     public PutManaIn() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -48,7 +46,7 @@ public class PutManaIn {
 
     private static final Map<UUID, Long> cooldowns = new HashMap<>();
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void rightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
@@ -67,19 +65,36 @@ public class PutManaIn {
 
         if (block instanceof ISourceTile sourceTile && mana.isPresent()) {
             IManaCap manaCap = mana.orElse(null);
-            int source = sourceTile.getSource();
+            int currentSource = sourceTile.getSource();
             int maxSource = sourceTile.getMaxSource();
-            if (source < maxSource) {
-                double costMana = manaCap.getCurrentMana();
-                if (Config.maxPerTrans != 0) costMana = Math.min(costMana, Config.maxPerTrans);
-                int transferMana = Math.min(maxSource - source,(int) (costMana * Config.transferRatio));
-                sourceTile.addSource(transferMana);
-                manaCap.removeMana(costMana);
+
+            DebugLogger.debug(player, "Transfer target: {}", block.getBlockPos());
+            DebugLogger.debug(player, "Target max mana: {}", maxSource);
+            DebugLogger.debug(player, "Current mana in target: {}", currentSource);
+
+            if (currentSource < maxSource) {
+                double availableMana = manaCap.getCurrentMana();
+                double transferableMana = availableMana * Config.transferRatio;
+
+                if (Config.maxPerTrans > 0) {
+                    transferableMana = Math.min(transferableMana, Config.maxPerTrans);
+                }
+
+                int actualTransfer = Math.min(maxSource - currentSource, (int) transferableMana);
+
+                double manaCost = actualTransfer / Config.transferRatio;
+
+                sourceTile.addSource(actualTransfer);
+                manaCap.removeMana(manaCost);
+
                 cooldowns.put(playerId, currentTime + Config.coolingTime);
-//                LOGGER.debug("Transfer mana: {}", transferMana);
-//                LOGGER.debug("Cost mana: {}", costMana);
+
+                DebugLogger.debug(player, "Transferred mana: {}", actualTransfer);
+                DebugLogger.debug(player, "Mana cost: {}", manaCost);
+
+                event.setCanceled(true);
+                event.setCancellationResult(InteractionResult.SUCCESS);
             }
         }
-
     }
 }

@@ -14,7 +14,7 @@ public class Config {
     public static final ForgeConfigSpec.IntValue COOLING_TIME = BUILDER.comment("The cooling time of transferring mana(By tick)").defineInRange("coolingTime", 0, 0, Integer.MAX_VALUE);
     public static final ForgeConfigSpec.BooleanValue ONLY_FOR_ORIGINS = BUILDER.comment("Whether to allow only origins to use").define("onlyForOrigins", false);
     public static final ForgeConfigSpec.BooleanValue NEED_EMPTY_HAND = BUILDER.comment("Whether to allow only empty hands to use").define("needEmptyHand", false);
-    public static final ForgeConfigSpec.BooleanValue NO_CROUCHING = BUILDER.comment("When Crouching not transfer mana").define("noCrouching", false);
+    public static final ForgeConfigSpec.BooleanValue NO_CROUCHING = BUILDER.comment("When Crouching not transfer mana").define("noCrouching", true);
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 

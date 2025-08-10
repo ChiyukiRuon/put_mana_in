@@ -97,6 +97,7 @@ minecraft {
         client {
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', mod_id
+            args '--width', '2560', '--height', '1440'
         }
 
         server {
@@ -183,6 +184,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:ars-nouveau-401955:5894609")
     runtimeOnly fg.deobf("curse.maven:botania-225643:5594997")
     runtimeOnly fg.deobf("curse.maven:create-328085:5838779")
+    runtimeOnly fg.deobf("curse.maven:ars-botania-1194681:6608957")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
