@@ -51,7 +51,7 @@ public class PutManaIn {
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (Config.needEmptyHand && !player.getMainHandItem().isEmpty()) return;
-        if (Config.noCrouching && player.isCrouching()) return;
+        if (Config.noCrouching && player.isShiftKeyDown()) return;
         if (Config.onlyForOrigins && ModList.get().isLoaded("origins")) {
             if (!IPowerContainer.hasPower(player, PutManaInPower.TRANSFER_MANA.get())) return;
         }
@@ -70,7 +70,6 @@ public class PutManaIn {
 
             DebugLogger.debug(player, "Transfer target: {}", block.getBlockPos());
             DebugLogger.debug(player, "Target max mana: {}", maxSource);
-            DebugLogger.debug(player, "Current mana in target: {}", currentSource);
 
             if (currentSource < maxSource) {
                 double availableMana = manaCap.getCurrentMana();
@@ -89,9 +88,11 @@ public class PutManaIn {
 
                 cooldowns.put(playerId, currentTime + Config.coolingTime);
 
+                DebugLogger.debug(player, "Current mana in target: {}", sourceTile.getSource());
                 DebugLogger.debug(player, "Transferred mana: {}", actualTransfer);
                 DebugLogger.debug(player, "Mana cost: {}", manaCost);
 
+                if (!Config.cancelRightClickEvent) return;
                 event.setCanceled(true);
                 event.setCancellationResult(InteractionResult.SUCCESS);
             }

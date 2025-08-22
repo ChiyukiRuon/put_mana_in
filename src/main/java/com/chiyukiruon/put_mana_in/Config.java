@@ -13,8 +13,9 @@ public class Config {
     public static final ForgeConfigSpec.IntValue MAX_PER_TRANS = BUILDER.comment("The maximum mana that can be transferred at once. 0 means no maximum").defineInRange("maxPerTrans", 0, 0, Integer.MAX_VALUE);
     public static final ForgeConfigSpec.IntValue COOLING_TIME = BUILDER.comment("The cooling time of transferring mana(By tick)").defineInRange("coolingTime", 0, 0, Integer.MAX_VALUE);
     public static final ForgeConfigSpec.BooleanValue ONLY_FOR_ORIGINS = BUILDER.comment("Whether to allow only origins to use").define("onlyForOrigins", false);
-    public static final ForgeConfigSpec.BooleanValue NEED_EMPTY_HAND = BUILDER.comment("Whether to allow only empty hands to use").define("needEmptyHand", false);
+    public static final ForgeConfigSpec.BooleanValue NEED_EMPTY_HAND = BUILDER.comment("Whether to allow only empty hands to use").define("needEmptyHand", true);
     public static final ForgeConfigSpec.BooleanValue NO_CROUCHING = BUILDER.comment("When Crouching not transfer mana").define("noCrouching", true);
+    public static final ForgeConfigSpec.BooleanValue CANCEL_RIGHT_CLICK_EVENT = BUILDER.comment("Whether to cancel the right-click event after injecting is successful").define("cancelRightClickEvent", false);
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
@@ -24,6 +25,7 @@ public class Config {
     public static boolean onlyForOrigins;
     public static boolean needEmptyHand;
     public static boolean noCrouching;
+    public static boolean cancelRightClickEvent;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -33,5 +35,6 @@ public class Config {
         onlyForOrigins = ONLY_FOR_ORIGINS.get();
         needEmptyHand = NEED_EMPTY_HAND.get();
         noCrouching = NO_CROUCHING.get();
+        cancelRightClickEvent = CANCEL_RIGHT_CLICK_EVENT.get();
     }
 }
