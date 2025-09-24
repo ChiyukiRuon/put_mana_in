@@ -21,6 +21,8 @@ You can customize the mod's behavior by adjusting the following options in the c
 | `needEmptyHand`         | `boolean` | `true`  | Requires player to have an empty hand to transfer mana                                                                                     |
 | `noCrouching`           | `boolean` | `true`  | Disables mana transfer when crouching                                                                                                      |
 | `cancelRightClickEvent` | `boolean` | `false` | Whether to cancel the right-click event after injecting is successful                                                                      |
+| `chargeParticleCount`   | `int`     | `20`    | The number of particles to be displayed when charging                                                                                      |
+| `chargeParticleRadius`  | `double`  | `0.5`   | The radius of the particles to be displayed when charging                                                                                  |
 
 Origins Power Example
 ```json

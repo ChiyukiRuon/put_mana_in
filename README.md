@@ -21,6 +21,8 @@
 | `needEmptyHand`         | `boolean` | `true`  | 仅在空手时注入魔力                                                          |
 | `noCrouching`           | `boolean` | `true`  | 潜行时不注入魔力                                                           |
 | `cancelRightClickEvent` | `boolean` | `false` | 是否在充能成功后取消右键事件                                                     |
+| `chargeParticleCount`   | `int`     | `20`    | 充能时的粒子数量                                                           |
+| `chargeParticleRadius`  | `double`  | `0.5`   | 充能时的粒子播放半径                                                         |
 
 
 起源能力示例

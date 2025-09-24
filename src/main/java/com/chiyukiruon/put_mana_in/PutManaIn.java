@@ -4,6 +4,8 @@ import com.chiyukiruon.put_mana_in.apoli.register.PutManaInPower;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import io.github.edwinmindcraft.apoli.api.component.IPowerContainer;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -56,11 +58,12 @@ public class PutManaIn {
             if (!IPowerContainer.hasPower(player, PutManaInPower.TRANSFER_MANA.get())) return;
         }
 
+        ServerLevel serverLevel = (ServerLevel) event.getLevel();
         UUID playerId = player.getUUID();
-        long currentTime = event.getLevel().getGameTime();
+        long currentTime = serverLevel.getGameTime();
         if (cooldowns.getOrDefault(playerId, 0L) > currentTime) return;
 
-        BlockEntity block = event.getLevel().getBlockEntity(event.getPos());
+        BlockEntity block = serverLevel.getBlockEntity(event.getPos());
         LazyOptional<IManaCap> mana = player.getCapability(MANA_CAPABILITY);
 
         if (block instanceof ISourceTile sourceTile && mana.isPresent()) {
@@ -85,6 +88,17 @@ public class PutManaIn {
 
                 sourceTile.addSource(actualTransfer);
                 manaCap.removeMana(manaCost);
+                serverLevel.sendParticles(
+                        ParticleTypes.HAPPY_VILLAGER,
+                        event.getPos().getX() + 0.5,
+                        event.getPos().getY() + 0.5,
+                        event.getPos().getZ() + 0.5,
+                        Config.chargeParticleCount,
+                        Config.chargeParticleRadius,
+                        Config.chargeParticleRadius,
+                        Config.chargeParticleRadius,
+                        0.01
+                );
 
                 cooldowns.put(playerId, currentTime + Config.coolingTime);
 
@@ -92,7 +106,10 @@ public class PutManaIn {
                 DebugLogger.debug(player, "Transferred mana: {}", actualTransfer);
                 DebugLogger.debug(player, "Mana cost: {}", manaCost);
 
-                if (!Config.cancelRightClickEvent) return;
+                if (!Config.cancelRightClickEvent) {
+                    player.swing(event.getHand(), true);
+                    return;
+                }
                 event.setCanceled(true);
                 event.setCancellationResult(InteractionResult.SUCCESS);
             }
